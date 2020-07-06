@@ -1,0 +1,49 @@
+﻿@model IEnumerable<QrCodeFileResponseModel>
+
+@{ Layout = "_Layout"; ViewBag.Title = "Qr Code Response";}
+
+<h2>Qr Code Response</h2>
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary()
+
+    <div class="form-group">
+        <input type="hidden" name="MAX_FILE_SIZE" value="1048576" />
+    </div>
+    <!-- The "name" of the input field has to be "file" as it is the name of the
+    POST parameter -->
+    <div class="form-group">
+        Choose QR code image to read/ scan: <input name="file" type="file" />
+        <input type="submit" value="Read QR code" />
+    </div>
+
+    if (Model != null)
+    {
+        <table>
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Symbol</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Type)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Symbol)</td>
+                    @foreach (var symbol in item.Symbol)
+                    {
+                        <td>@Html.DisplayFor(modelItem => symbol.Seq)</td>
+                        <td>@Html.DisplayFor(modelItem => symbol.Data)</td>
+                        <td>@Html.DisplayFor(modelItem => symbol.Error)</td>
+                    }
+                </tr>
+                }
+            </tbody>
+        </table>
+
+    }
+}

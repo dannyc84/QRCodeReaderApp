@@ -1,5 +1,5 @@
 # QRCodeReaderApp
-QRCodeReaderApp is a simple web application to read QR Codes
+QRCodeReaderApp is a simple web application to read QR Codes. It is built following the instructions here: https://documentcloud.adobe.com/link/track?uri=urn:aaid:scds:US:a2ca0ebc-ee92-4f4e-b691-5e8719ca8258
 
 ## Getting Started
 Use these instructions to get the project up and running.

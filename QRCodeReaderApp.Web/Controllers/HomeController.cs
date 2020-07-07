@@ -35,13 +35,9 @@ namespace QRCodeReaderApp.Web.Controllers
         {
             var qrCodeUploaded = await _qrCodeService.UploadQrCode(file);
 
-            using var content = new MultipartFormDataContent();
-            var fs = System.IO.File.ReadAllBytes(qrCodeUploaded);
-            content.Add(new ByteArrayContent(fs), "file", "file" + Path.GetExtension(qrCodeUploaded));
+            var content = await _qrCodeService.GetQrCodecontent(qrCodeUploaded);
 
-            using var response = await new HttpClient().PostAsync("http://api.qrserver.com/v1/read-qr-code/", content);
-
-            string apiResponse = await response.Content.ReadAsStringAsync();
+            var apiResponse = await _qrCodeService.ReadQrCode(content);
 
             var qrCodeFileResponse = JsonConvert.DeserializeObject<List<QrCodeFileResponseModel>>(apiResponse);
 

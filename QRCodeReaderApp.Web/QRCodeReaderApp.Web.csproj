@@ -12,4 +12,8 @@
     <ProjectReference Include="..\QRCodeReaderApp.Application\QRCodeReaderApp.Application.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\qrCodes\" />
+  </ItemGroup>
+
 </Project>

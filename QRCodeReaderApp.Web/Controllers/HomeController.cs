@@ -33,15 +33,19 @@ namespace QRCodeReaderApp.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(IFormFile file)
         {
-            var qrCodeUploaded = await _qrCodeService.UploadQrCode(file);
+            var uploadedQrCodePath = await _qrCodeService.UploadQrCode(file);
 
-            var content = await _qrCodeService.GetQrCodecontent(qrCodeUploaded);
+            var content = await _qrCodeService.GetQrCodecontent(uploadedQrCodePath);
 
             var apiResponse = await _qrCodeService.ReadQrCode(content);
 
-            var qrCodeFileResponse = JsonConvert.DeserializeObject<List<QrCodeFileResponseModel>>(apiResponse);
+            if (!string.IsNullOrEmpty(apiResponse)) {
+                var qrCodeFileResponse = JsonConvert.DeserializeObject<List<QrCodeFileResponseModel>>(apiResponse);
 
-            return View(qrCodeFileResponse);
+                return View(qrCodeFileResponse);
+            }
+
+            return View();
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

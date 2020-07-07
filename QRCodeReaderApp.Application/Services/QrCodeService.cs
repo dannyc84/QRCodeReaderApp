@@ -26,7 +26,7 @@ namespace QRCodeReaderApp.Application.Services
                 throw new ArgumentNullException(nameof(file));
             }
 
-            if (CheckIfImageFile(file))
+            if (await CheckIfImageFile(file))
             {
                 return await WriteFile(file);
             }
@@ -36,6 +36,11 @@ namespace QRCodeReaderApp.Application.Services
 
         public async Task<MultipartFormDataContent> GetQrCodecontent(string filePath)
         {
+            if (filePath is null)
+            {
+                throw new ArgumentNullException(nameof(filePath));
+            }
+
             var content = new MultipartFormDataContent();
             var fs = await File.ReadAllBytesAsync(filePath);
             content.Add(new ByteArrayContent(fs), "file", "file" + Path.GetExtension(filePath));
@@ -44,36 +49,39 @@ namespace QRCodeReaderApp.Application.Services
 
         public async Task<string> ReadQrCode(HttpContent fileContent)
         {
+            if (fileContent is null)
+            {
+                throw new ArgumentNullException(nameof(fileContent));
+            }
+
             using var response = await new HttpClient().PostAsync(ReadQrCodeApiUrl, fileContent);
 
             return await response.Content.ReadAsStringAsync();
         }
 
-        private bool CheckIfImageFile(IFormFile file)
+        private async Task<bool> CheckIfImageFile(IFormFile file)
         {
             byte[] fileBytes;
             using (var ms = new MemoryStream())
             {
-                file.CopyTo(ms);
+                await file.CopyToAsync(ms);
                 fileBytes = ms.ToArray();
             }
 
             return QrCodeHelper.GetImageFormat(fileBytes) != QrCodeFormat.unknown;
         }
 
-        public async Task<string> WriteFile(IFormFile file)
+        private async Task<string> WriteFile(IFormFile file)
         {
             string path;
             try
             {
                 var format = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
                 var fileName = Guid.NewGuid().ToString() + format;
-                path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", fileName);
+                path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot//qrCodes", fileName);
 
-                using (var bits = new FileStream(path, FileMode.Create))
-                {
-                    await file.CopyToAsync(bits);
-                }
+                using var bits = new FileStream(path, FileMode.Create);
+                await file.CopyToAsync(bits);
             }
             catch (Exception e)
             {

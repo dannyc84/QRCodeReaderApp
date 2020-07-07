@@ -9,7 +9,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QRCodeReaderApp.Web", "QRCo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{41D8E652-C3C2-4A84-B969-53B20758801B}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\Documents\Work\Spain\IT Companies\Transperfect\qr-code.png = ..\..\..\Documents\Work\Spain\IT Companies\Transperfect\qr-code.png
+		.gitignore = .gitignore
+		LICENSE.md = LICENSE.md
+		..\..\..\..\..\..\Desktop\qr-code.png = ..\..\..\..\..\..\Desktop\qr-code.png
+		README.md = README.md
 	EndProjectSection
 EndProject
 Global

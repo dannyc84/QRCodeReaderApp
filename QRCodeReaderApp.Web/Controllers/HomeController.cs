@@ -2,15 +2,12 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
-using QRCodeReaderApp.Application.Extensions;
 using QRCodeReaderApp.Application.Interfaces;
 using QRCodeReaderApp.Web.Models;
 
@@ -42,9 +39,7 @@ namespace QRCodeReaderApp.Web.Controllers
             var fs = System.IO.File.ReadAllBytes(qrCodeUploaded);
             content.Add(new ByteArrayContent(fs), "file", "file" + Path.GetExtension(qrCodeUploaded));
 
-            using var httpClient = new HttpClient();
-
-            using var response = await httpClient.PostAsync("http://api.qrserver.com/v1/read-qr-code/", content);
+            using var response = await new HttpClient().PostAsync("http://api.qrserver.com/v1/read-qr-code/", content);
 
             string apiResponse = await response.Content.ReadAsStringAsync();
 

@@ -1,5 +1,3 @@
-using System;
-
 namespace QRCodeReaderApp.Web.Models
 {
     public class ErrorViewModel

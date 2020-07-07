@@ -1,8 +1,14 @@
 ﻿@model IEnumerable<QrCodeFileResponseModel>
 
-@{ Layout = "_Layout"; ViewBag.Title = "Qr Code Response";}
+@{ Layout = "_Layout"; ViewBag.Title = "Qr Code Reader App";}
 
-<h2>Qr Code Response</h2>
+<h2>Qr Code Reader App</h2>
+
+<style>
+    th, td {
+        text-align: "center"
+    }
+</style>
 
 @using (Html.BeginForm("Index", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
@@ -21,26 +27,29 @@
 
     if (Model != null)
     {
-        <table>
+        <table style="width:100%">
             <thead>
                 <tr>
                     <th>Type</th>
                     <th>Symbol</th>
+                    <th>Seq</th>
+                    <th>Data</th>
+                    <th>Error</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => item.Type)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Symbol)</td>
-                    @foreach (var symbol in item.Symbol)
-                    {
-                        <td>@Html.DisplayFor(modelItem => symbol.Seq)</td>
-                        <td>@Html.DisplayFor(modelItem => symbol.Data)</td>
-                        <td>@Html.DisplayFor(modelItem => symbol.Error)</td>
-                    }
-                </tr>
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.Type)</td>
+                        <td>@Html.DisplayFor(modelItem => item.Symbol)</td>
+                        @foreach (var symbol in item.Symbol)
+                        {
+                            <td>@Html.DisplayFor(modelItem => symbol.Seq)</td>
+                            <td>@Html.DisplayFor(modelItem => symbol.Data)</td>
+                            <td>@Html.DisplayFor(modelItem => symbol.Error)</td>
+                        }
+                    </tr>
                 }
             </tbody>
         </table>

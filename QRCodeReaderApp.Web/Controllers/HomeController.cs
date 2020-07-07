@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -37,19 +38,21 @@ namespace QRCodeReaderApp.Web.Controllers
         {
             var qrCodeUploaded = await _qrCodeService.UploadQrCode(file);
 
-            var qrCodeUrl = StringExtensions.MapUrl(qrCodeUploaded);
+            using var content = new MultipartFormDataContent();
+            var fs = System.IO.File.ReadAllBytes(qrCodeUploaded);
+            content.Add(new ByteArrayContent(fs), "file", "file" + Path.GetExtension(qrCodeUploaded));
 
-            var encodedQrCodeUrl = WebUtility.UrlEncode(qrCodeUrl);
+            using var httpClient = new HttpClient();
 
-            var qrCodeFileResponse = new List<QrCodeFileResponseModel>();
-            using (var httpClient = new HttpClient())
-            {
-                using var response = await httpClient.GetAsync("http://api.qrserver.com/v1/read-qr-code/" + encodedQrCodeUrl);
-                string apiResponse = await response.Content.ReadAsStringAsync();
-                qrCodeFileResponse = JsonConvert.DeserializeObject<List<QrCodeFileResponseModel>>(apiResponse);
-            }
+            using var response = await httpClient.PostAsync("http://api.qrserver.com/v1/read-qr-code/", content);
+
+            string apiResponse = await response.Content.ReadAsStringAsync();
+
+            var qrCodeFileResponse = JsonConvert.DeserializeObject<List<QrCodeFileResponseModel>>(apiResponse);
+
             return View(qrCodeFileResponse);
         }
+
 
         public IActionResult Privacy()
         {
